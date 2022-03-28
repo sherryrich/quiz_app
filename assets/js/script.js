@@ -6,6 +6,10 @@ const answerButtonsElement = document.getElementById("answer-buttons")
 let shuffledQuestions, currentQuestionIndex
 
 startButton.addEventListener("click", startGame)
+nextButton.addEventListener("click", () => {
+    currentQuestionIndex++
+    setNextQuestion()
+})
 
 function startGame() {
     console.log('Started')
@@ -38,6 +42,7 @@ function showQuestion(question) {
 }
 
 function resetState() {
+    clearStatusClass(document.body)
     nextButton.classList.add("hide")
     while (answerButtonsElement.firstChild) {
         answerButtonsElement.removeChild(answerButtonsElement.firstChild)
@@ -46,8 +51,34 @@ function resetState() {
 
 
 function selectAnswer(e) {
-
+    const selectedButton = e.target
+    const correct = selectedButton.dataset.correct
+    setStatusClass(document.body, correct)
+    Array.from(answerButtonsElement.children).forEach(button => {
+        setStatusClass(button, button.dataset.correct)
+    })
+    if (shuffledQuestions.length > currentQuestionIndex + 1) {
+    nextButton.classList.remove("hide")
+} else {
+    startButton.innerText = "Restart"
+    startButton.classList.remove("hide")
 }
+}
+
+function setStatusClass(element, correct) {
+    clearStatusClass(element)
+    if (correct) {
+        element.classList.add("correct")
+    } else {
+        element.classList.add("wrong")
+}    }
+
+function clearStatusClass(element) {
+    element.classList.remove("correct")
+    element.classList.remove("wrong")
+}
+
+
 
 const questions = [
     {
@@ -55,7 +86,28 @@ const questions = [
         answers: [
             { text: "4", correct: true},
             { text: "22", correct: false}
+        ]
+    },
 
+    {
+        question: "What is 4 + 4?",
+        answers: [
+            { text: "12", correct: false},
+            { text: "8", correct: true},
+            { text: "1", correct: false},
+            { text: "3", correct: false}
+        ]
+    },
+
+    {
+        question: "What is 8 * 8?",
+        answers: [
+            { text: "64", correct: true},
+            { text: "56", correct: false},
+            { text: "28", correct: false},
+            { text: "74", correct: false}
         ]
     }
+
+
 ]
